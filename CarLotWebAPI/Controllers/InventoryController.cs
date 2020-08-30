@@ -92,5 +92,47 @@ namespace CarLotWebAPI.Controllers
             }
             return StatusCode(HttpStatusCode.NoContent);
         }
+
+        //POST: api/inventory
+        [HttpPost, Route("")]
+        [ResponseType(typeof(Inventory))]
+        public IHttpActionResult PostInventory(Inventory inventory)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                _repo.Add(inventory);
+            }
+            catch(Exception ex)
+            {
+                //must be other actions
+                throw;
+            }
+            return CreatedAtRoute("DisplayRoute", new { id = inventory.Id }, inventory);
+        }
+
+        //DELETE: api/Inventory/id
+        [HttpDelete, Route("{id}")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult DeleteInventory(int id,Inventory inventory)
+        {
+            if(id != inventory.Id)
+            {
+                return BadRequest();
+            }
+            try
+            {
+                _repo.Delete(inventory);
+            }
+            catch(Exception ex)
+            {
+                //must be other actions
+                throw;
+            }
+            return Ok();
+        }
     }
 }
