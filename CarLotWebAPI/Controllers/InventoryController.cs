@@ -43,7 +43,7 @@ namespace CarLotWebAPI.Controllers
         public IEnumerable<Inventory> GetInventory()
         {
             var inventories = _repo.GetAll();
-            return mapper.Map<List<Inventory>,List <Inventory>>(inventories);
+            return mapper.Map<List<Inventory>, List<Inventory>>(inventories);
         }
 
         //GET: api/Inventory/5
@@ -66,6 +66,31 @@ namespace CarLotWebAPI.Controllers
                 _repo.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        //PUT: api/Inventory
+        [HttpPut, Route("{id}")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult PutInventory(int id, Inventory inventory)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if(id != inventory.Id)
+            {
+                return BadRequest();
+            }
+            try
+            {
+                _repo.Save(inventory);
+            }
+            catch(Exception ex)
+            {
+                //must be other actions
+                throw;
+            }
+            return StatusCode(HttpStatusCode.NoContent);
         }
     }
 }
