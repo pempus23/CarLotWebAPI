@@ -43,8 +43,7 @@ namespace CarLotWebAPI.Controllers
         public IEnumerable<Inventory> GetInventory()
         {
             var inventories = _repo.GetAll();
-            return mapper.Map<List<Inventory>, List<Inventory>>(inventories);
-
+            return mapper.Map<List<Inventory>, List<Inventory>> (inventories);
         }
 
         //GET: api/Inventory/5
