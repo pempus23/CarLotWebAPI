@@ -43,9 +43,21 @@ namespace AutoLotDAL.Repos
             return SaveChanges();
         }
 
-        public int Delete(int id, byte[] timeStamp)
+        public int Delete(int id)
         {
-            _db.Entry(new T() {Id = id, Timestamp = timeStamp}).State = EntityState.Deleted;
+            if (_db.Orders.FirstOrDefault(o => o.Id == id) != null )
+            {
+                var car = _table.First(c => c.Id == id);
+                var ord = _db.Orders.FirstOrDefault(o => o.Id == id);
+                //_db.Orders.Remove(ord);
+                _db.Entry(car).State = EntityState.Deleted;
+                _db.Entry(ord).State = EntityState.Deleted;
+            }
+            else
+            {
+                var car = _table.First(c => c.Id == id);
+                _db.Entry(car).State = EntityState.Deleted;
+            }
             return SaveChanges();
         }
 

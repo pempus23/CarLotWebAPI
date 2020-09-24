@@ -5,21 +5,25 @@
     <meta name="viewport" content="width=device-width" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <title>List</title>
-   @*  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css" rel="stylesheet" />  *@
+    @* <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css" rel="stylesheet" />   *@
 </head>
 <body>
     <h2>List auto</h2>
     <form name="userForm">
             <input type="hidden" name="id" value="0" />
-            <div class="form-group col-md-5">
-                <label for="name">Color:</label>
-                <input class="form-control" name="name" />
+            <div class="form-group col-md-3">
+                <label for="color">Color:</label>
+                <input class="form-control" name="color" />
             </div>
-            <div class="form-group col-md-5">
-                <label for="age">Make:</label>
-                <input class="form-control" name="age"/>
+            <div class="form-group col-md-3">
+                <label for="make">Make:</label>
+                <input class="form-control" name="make"/>
             </div>
-            <div class="panel-body">
+             <div class="form-group col-md-3">
+                <label for="petName">PetName:</label>
+                <input class="form-control" name="petName"/>
+            </div>
+            <div class="panel-body col-md-2">
                 <button type="submit" id="submit" class="btn btn-primary">Save</button>
                 <a id="reset" class="btn btn-primary">Reset</a>
             </div>
@@ -28,54 +32,9 @@
     <thead><tr><th>Id</th><th>PetName</th><th>Color</th><th>Make</th></tr></thead>
     <tbody>
     </tbody>
-
     </table>
-   @*  <script>
-        var settings = {
-            "async": true,
-            "crossDomain": true,
-            "url": "http://localhost:62892/api/Inventory",
-            "method": "GET"
-        }
-        $.ajax(settings).done(function (response) {
 
-            var size = Object.keys(response).length;
-  
-            var body = document.getElementsByTagName("body")[0];
-            var tbl = document.createElement("table");
-            var tblBody = document.createElement("tbody");
-            for (var i = 0; i < size; i++) {
-                var row = document.createElement("tr");
-                
-                    var cell1 = document.createElement("td");
-                    var cellText1 = document.createTextNode(response[i].Id);
-                    cell1.appendChild(cellText1);
-                    row.appendChild(cell1);
-                
-                    var cell2 = document.createElement("td");
-                    var cellText2 = document.createTextNode(response[i].Color);
-                    cell2.appendChild(cellText2);
-                    row.appendChild(cell2);
-
-                    var cell3 = document.createElement("td");
-                    var cellText3 = document.createTextNode(response[i].PetName);
-                    cell3.appendChild(cellText3);
-                    row.appendChild(cell3);
-
-                    var cell4 = document.createElement("td");
-                    var cellText4 = document.createTextNode(response[i].Make);
-                    cell4.appendChild(cellText4);
-                    row.appendChild(cell4);
-                
-                    tblBody.appendChild(row);
-            }
-            tbl.appendChild(tblBody);
-            body.appendChild(tbl);
-            tbl.setAttribute("class","table table-condensed table-striped col-md-5");
-        });
-    </script> *@
-
-    <script>
+  <script>
         // Получение всех пользователей
         async function GetUsers() {
             // отправляет запрос и получаем ответ
@@ -96,61 +55,67 @@
         }};
 // Получение одного пользователя
         async function GetUser(id) {
-            const response = await fetch("http://localhost:62892/api/Inventory" + id, {
+            const response = await fetch("http://localhost:62892/api/Inventory/" + id, {
                 method: "GET",
                 headers: { "Accept": "application/json" }
             });
             if (response.ok === true) {
-                const user = await response.json();
+                const car = await response.json();
                 const form = document.forms["userForm"];
-                form.elements["id"].value = user.Id;
-                form.elements["name"].value = user.Color;
-                form.elements["age"].value = user.PetName;
+                form.elements["id"].value = car.Id;
+                form.elements["color"].value = car.Color;
+                form.elements["petName"].value = car.PetName;
+                form.elements["make"].value = car.Make;
             }
         }
         // Добавление пользователя
-        async function CreateUser(userName, color) {
+        async function CreateUser(userName, color, make) {
  
             const response = await fetch("http://localhost:62892/api/Inventory", {
                 method: "POST",
                 headers: { "Accept": "application/json", "Content-Type": "application/json" },
                 body: JSON.stringify({
                     PetName: userName,
-                    Color: color
+                    Color: color,
+                    Make: make
                 })
             });
             if (response.ok === true) {
-                const user = await response.json();
+                const car = await response.json();
                 reset();
-                document.querySelector("tbody").append(row(user));
+                document.querySelector("tbody").append(row(car));
             }
         }
         // Изменение пользователя
-        async function EditUser(userId, userName, userAge) {
-            const response = await fetch("http://localhost:62892/api/Inventory", {
+        async function EditUser(id, userName, color, make) {
+            const response = await fetch("http://localhost:62892/api/Inventory/"+ id, {
                 method: "PUT",
                 headers: { "Accept": "application/json", "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    id: parseInt(userId, 10),
-                    name: userName,
-                    age: parseInt(userAge, 10)
+                    Id: parseInt(id, 10),
+                    PetName: userName,
+                    Color: color,
+                    Make: make
                 })
             });
             if (response.ok === true) {
-                const user = await response.json();
+                const car = await response.json();
                 reset();
-                document.querySelector("tr[data-rowid='" + user.id + "']").replaceWith(row(user));
+                document.querySelector("tr[data-rowid='" + car.Id + "']").replaceWith(row(car));
             }
         }
         // Удаление пользователя
-        async function DeleteUser(id) {
-            const response = await fetch("http://localhost:62892/api/Inventory" + id, {
+        async function DeleteUser(Id) {
+            const response = await fetch("http://localhost:62892/api/Inventory/" + Id, {
                 method: "DELETE",
-                headers: { "Accept": "application/json" }
+                headers: { "Accept": "application/json", "Content-Type": "application/json"  },
+                body: JSON.stringify({
+                    Id: Id
+                })
             });
             if (response.ok === true) {
-                const user = await response.json();
-                document.querySelector("tr[data-rowid='" + user.Id + "']").remove();
+                const car = await response.json();
+                document.querySelector("tr[data-rowid='" + car.Id + "']").remove();
             }
         }
  
@@ -212,7 +177,6 @@
         }
         // сброс значений формы
         document.getElementById("reset").click(function (e) {
- 
             e.preventDefault();
             reset();
         })
@@ -222,12 +186,13 @@
             e.preventDefault();
             const form = document.forms["userForm"];
             const id = form.elements["id"].value;
-            const name = form.elements["name"].value;
-            const age = form.elements["age"].value;
+            const userName = form.elements["petName"].value;
+            const color = form.elements["color"].value;
+            const make = form.elements["make"].value;
             if (id == 0)
-                CreateUser(name, age);
+                CreateUser(userName, color, make);
             else
-                EditUser(id, name, age);
+                EditUser(id, userName, color, make);
         });
  
         // загрузка пользователей

@@ -26,19 +26,6 @@ namespace CarLotWebAPI.Controllers
 
         private readonly InventoryRepo _repo = new InventoryRepo();
 
-        //[HttpGet, Route("")]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "Value2" };
-        //}
-
-        ////GET api/values/5
-        //public string Get (int id)
-        //{
-        //    return id.ToString();
-        //}
-
-        //GET: api/Inventory
         [HttpGet, Route("")]
         public IEnumerable<Inventory> GetInventory()
         {
@@ -117,15 +104,11 @@ namespace CarLotWebAPI.Controllers
         //DELETE: api/Inventory/id
         [HttpDelete, Route("{id}")]
         [ResponseType(typeof(void))]
-        public IHttpActionResult DeleteInventory(int id,Inventory inventory)
-        {
-            if(id != inventory.Id)
-            {
-                return BadRequest();
-            }
+        public IHttpActionResult DeleteInventory(int id)
+        { 
             try
             {
-                _repo.Delete(inventory);
+                _repo.Delete(id);
             }
             catch(Exception ex)
             {
