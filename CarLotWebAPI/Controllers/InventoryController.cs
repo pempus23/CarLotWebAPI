@@ -25,6 +25,7 @@ namespace CarLotWebAPI.Controllers
         }
 
         private readonly InventoryRepo _repo = new InventoryRepo();
+        
 
         [HttpGet, Route("")]
         public IEnumerable<Inventory> GetInventory()

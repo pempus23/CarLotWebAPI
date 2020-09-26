@@ -4,8 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <title>List</title>
-    @* <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css" rel="stylesheet" />   *@
+    <title class="blockquote-footer">List</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css"/>   
 </head>
 <body>
     <h2>List auto</h2>
@@ -24,8 +24,8 @@
                 <input class="form-control" name="petName"/>
             </div>
             <div class="panel-body col-md-2">
-                <button type="submit" id="submit" class="btn btn-primary">Save</button>
-                <a id="reset" class="btn btn-primary">Reset</a>
+                <button type="submit" id="submit" class="btn btn-primary" onclick="reloadPage()">Save</button>
+                @* <a id="reset" class="btn btn-primary">Reset</a> *@
             </div>
         </form>
     <table class="table table-condensed table-striped  col-md-6">
@@ -35,6 +35,9 @@
     </table>
 
   <script>
+        function reloadPage(){
+            location.reload(true);
+        }
         // Получение всех пользователей
         async function GetUsers() {
             // отправляет запрос и получаем ответ
@@ -115,7 +118,7 @@
             });
             if (response.ok === true) {
                 const car = await response.json();
-                document.querySelector("tr[data-rowid='" + car.Id + "']").remove();
+                document.querySelector("tr[data-rowid='" + car.Id + "']").remove();           
             }
         }
  
@@ -163,23 +166,25 @@
             const removeLink = document.createElement("a");
             removeLink.setAttribute("data-id", car.Id);
             removeLink.setAttribute("style", "cursor:pointer;padding:15px;");
+             removeLink.setAttribute("onclick", "reloadPage();");
             removeLink.append("Delete");
             removeLink.addEventListener("click", e => {
  
                 e.preventDefault();
                 DeleteUser(car.Id);
+                             
             });
- 
             linksTd.append(removeLink);
             tr.appendChild(linksTd);
  
             return tr;
         }
         // сброс значений формы
-        document.getElementById("reset").click(function (e) {
+       @*  document.getElementById("reset").click(function (e) {
+            reloadPage()
             e.preventDefault();
             reset();
-        })
+        }) *@
  
         // отправка формы
         document.forms["userForm"].addEventListener("submit", e => {

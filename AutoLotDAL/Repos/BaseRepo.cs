@@ -49,7 +49,6 @@ namespace AutoLotDAL.Repos
             {
                 var car = _table.First(c => c.Id == id);
                 var ord = _db.Orders.FirstOrDefault(o => o.Id == id);
-                //_db.Orders.Remove(ord);
                 _db.Entry(car).State = EntityState.Deleted;
                 _db.Entry(ord).State = EntityState.Deleted;
             }
