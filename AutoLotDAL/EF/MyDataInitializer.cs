@@ -42,6 +42,7 @@ namespace AutoLotDAL.EF
                 new Order {Car = cars[1], Customer = customers[1]},
                 new Order {Car = cars[2], Customer = customers[2]},
                 new Order {Car = cars[3], Customer = customers[3]},
+                new Order {Car = cars[4], Customer = customers[4]},
             };
             orders.ForEach(x => context.Orders.AddOrUpdate(c => new {c.CarId, c.CustomerId}, x));
 
