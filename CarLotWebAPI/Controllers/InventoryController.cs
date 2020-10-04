@@ -23,9 +23,8 @@ namespace CarLotWebAPI.Controllers
             mapper = config.CreateMapper();
 
         }
-
+     
         private readonly InventoryRepo _repo = new InventoryRepo();
-        
 
         [HttpGet, Route("")]
         public IEnumerable<Inventory> GetInventory()

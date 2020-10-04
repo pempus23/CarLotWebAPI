@@ -38,6 +38,44 @@
         function reloadPage(){
             location.reload(true);
         }
+        //Get orders
+         async function GetOrders(id) {
+            const response = await fetch("http://localhost:62892/api/Order/" + id, {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                const order = await response.json();
+                console.log(order);
+                if(order[0] != null){
+                    order.forEach(function(ord){
+                        alert(ord.Id + ' ' +ord.FullName);
+                    })
+                }
+                else{
+                    alert('This car don`t have customers');
+                }
+                
+            }
+        }
+        //Отримання покупців
+          async function GetCustomer() {
+            // отправляет запрос и получаем ответ
+            const response = await fetch("http://localhost:62892/api/Customer", {
+                method: "GET",
+                headers: { "Accept": "application/json" },
+            });
+            // если запрос прошел нормально
+            if (response.ok === true) {
+                // получаем данные
+                const customers = await response.json();
+                console.log(customers);
+                //let rows = document.querySelector("tbody"); 
+               // cars.forEach(car => {
+               //     rows.append(row(customers));
+               // });
+         
+        }};
         // Получение всех пользователей
         async function GetUsers() {
             // отправляет запрос и получаем ответ
@@ -166,7 +204,7 @@
             const removeLink = document.createElement("a");
             removeLink.setAttribute("data-id", car.Id);
             removeLink.setAttribute("style", "cursor:pointer;padding:15px;");
-             removeLink.setAttribute("onclick", "reloadPage();");
+            removeLink.setAttribute("onclick", "reloadPage();");
             removeLink.append("Delete");
             removeLink.addEventListener("click", e => {
  
@@ -175,16 +213,23 @@
                              
             });
             linksTd.append(removeLink);
+
+            const viewcust = document.createElement("button");
+            viewcust.setAttribute("data-id", car.Id);
+            viewcust.setAttribute("style", "cursor:pointer;padding:6px;");
+            viewcust.append("View customers");
+            viewcust.addEventListener("click", e => {
+ 
+                e.preventDefault();
+                GetOrders(car.Id);
+                             
+            });
+            linksTd.append(viewcust);
             tr.appendChild(linksTd);
  
             return tr;
         }
-        // сброс значений формы
-       @*  document.getElementById("reset").click(function (e) {
-            reloadPage()
-            e.preventDefault();
-            reset();
-        }) *@
+
  
         // отправка формы
         document.forms["userForm"].addEventListener("submit", e => {
@@ -202,7 +247,8 @@
  
         // загрузка пользователей
         GetUsers();
-
+        GetCustomer();
+        
     </script>
 
 </body>

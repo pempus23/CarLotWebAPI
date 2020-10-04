@@ -10,7 +10,7 @@ namespace AutoLotDAL.Repos
 {
     public class BaseRepo<T> : IDisposable, IRepo<T> where T : EntityBase, new()
     {
-        private readonly DbSet<T> _table;
+        protected readonly DbSet<T> _table;
         private readonly AutoLotEntities _db;
         protected AutoLotEntities Context => _db;
 
@@ -41,25 +41,7 @@ namespace AutoLotDAL.Repos
         {
             _db.Entry(entity).State = EntityState.Modified;
             return SaveChanges();
-        }
-
-        public int Delete(int id)
-        {
-            if (_db.Orders.FirstOrDefault(o => o.Id == id) != null )
-            {
-                var car = _table.First(c => c.Id == id);
-                var ord = _db.Orders.FirstOrDefault(o => o.Id == id);
-                _db.Entry(car).State = EntityState.Deleted;
-                _db.Entry(ord).State = EntityState.Deleted;
-            }
-            else
-            {
-                var car = _table.First(c => c.Id == id);
-                _db.Entry(car).State = EntityState.Deleted;
-            }
-            return SaveChanges();
-        }
-
+        }      
 
         public int Delete(T entity)
         {
@@ -107,6 +89,11 @@ namespace AutoLotDAL.Repos
                 //some other exception happened and should be handled
                 throw;
             }
+        }
+
+        public int Delete(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
