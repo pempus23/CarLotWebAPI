@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <title class="blockquote-footer">List</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css"/>   
 </head>
@@ -23,8 +24,8 @@
                 <label for="petName">PetName:</label>
                 <input class="form-control" name="petName"/>
             </div>
-            <div class="panel-body col-md-2">
-                <button type="submit" id="submit" class="btn btn-primary" onclick="reloadPage()">Save</button>
+            <div class="panel-body">
+                <button type="submit" id="submit" class="btn btn-success btn-lg btn-block" onclick="reloadPage()">Save</button>
                 @* <a id="reset" class="btn btn-primary">Reset</a> *@
             </div>
         </form>
@@ -156,7 +157,8 @@
             });
             if (response.ok === true) {
                 const car = await response.json();
-                document.querySelector("tr[data-rowid='" + car.Id + "']").remove();           
+                document.querySelector("tr[data-rowid='" + car.Id + "']").remove();
+                reloadPage();          
             }
         }
  
@@ -192,7 +194,8 @@
  
             const editLink = document.createElement("a");
             editLink.setAttribute("data-id", car.Id);
-            editLink.setAttribute("style", "cursor:pointer;padding:15px;");
+            editLink.setAttribute("style", "cursor:pointer;padding:3px;");
+            editLink.setAttribute("class", "btn btn-warning");
             editLink.append("Change");
             editLink.addEventListener("click", e => {
  
@@ -200,11 +203,12 @@
                 GetUser(car.Id);
             });
             linksTd.append(editLink);
- 
+
             const removeLink = document.createElement("a");
             removeLink.setAttribute("data-id", car.Id);
-            removeLink.setAttribute("style", "cursor:pointer;padding:15px;");
+            removeLink.setAttribute("style", "cursor:pointer;padding:3px;");
             removeLink.setAttribute("onclick", "reloadPage();");
+            removeLink.setAttribute("class", "btn btn-danger");
             removeLink.append("Delete");
             removeLink.addEventListener("click", e => {
  
@@ -214,9 +218,11 @@
             });
             linksTd.append(removeLink);
 
+            const linksTdTwo = document.createElement("td");
             const viewcust = document.createElement("button");
             viewcust.setAttribute("data-id", car.Id);
-            viewcust.setAttribute("style", "cursor:pointer;padding:6px;");
+            viewcust.setAttribute("style", "cursor:pointer;padding:10px;");
+            viewcust.setAttribute("class", "btn btn-primary");    
             viewcust.append("View customers");
             viewcust.addEventListener("click", e => {
  
@@ -224,8 +230,10 @@
                 GetOrders(car.Id);
                              
             });
-            linksTd.append(viewcust);
+            linksTdTwo.append(viewcust);
             tr.appendChild(linksTd);
+    
+            tr.appendChild(linksTdTwo);
  
             return tr;
         }
