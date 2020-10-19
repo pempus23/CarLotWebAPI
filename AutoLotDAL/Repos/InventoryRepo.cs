@@ -1,11 +1,10 @@
 ﻿using AutoLotDAL.Models;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 
 namespace AutoLotDAL.Repos
 {
-    public class InventoryRepo : BaseRepo<Inventory>
+    public class InventoryRepo : BaseRepo<Inventory>, IExtendRepository<Inventory>
     {
         public override List<Inventory> GetAll() 
             => Context.Cars.OrderBy(x=>x.Id).ToList();
@@ -13,7 +12,7 @@ namespace AutoLotDAL.Repos
         {
             return (Context.Cars.Where(c => c.Id == id).ToList());
         }
-        public new int Delete(int id)
+        public int Delete(int id)
         {
             Inventory car = Context.Cars.FirstOrDefault(row => row.Id == id);
             IQueryable<Order> ord = Context.Orders.Where(c => c.CarId == id); 

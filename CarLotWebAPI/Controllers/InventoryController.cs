@@ -13,6 +13,8 @@ namespace CarLotWebAPI.Controllers
     [RoutePrefix("api/Inventory")]
     public class InventoryController : ApiController
     {
+        private readonly IExtendRepository<Inventory> _repository;
+
         static IMapper mapper;
         static InventoryController()
         {
@@ -23,13 +25,16 @@ namespace CarLotWebAPI.Controllers
             mapper = config.CreateMapper();
 
         }
-     
-        private readonly InventoryRepo _repo = new InventoryRepo();
+
+        public InventoryController(IExtendRepository<Inventory> repository)
+        {
+            _repository = repository;
+        }
 
         [HttpGet, Route("")]
         public IEnumerable<Inventory> GetInventory()
         {
-            var inventories = _repo.GetAll();
+            var inventories = _repository.GetAll();
             return mapper.Map<List<Inventory>, List<Inventory>> (inventories);
         }
 
@@ -38,7 +43,7 @@ namespace CarLotWebAPI.Controllers
         [ResponseType(typeof(Inventory))]
         public async Task<IHttpActionResult> GetInventory(int id)
         {
-            Inventory inventory = _repo.GetOne(id);
+            Inventory inventory = _repository.GetOne(id);
             if (inventory == null)
             {
                 return NotFound();
@@ -50,7 +55,7 @@ namespace CarLotWebAPI.Controllers
         {
             if (disposing)
             {
-                _repo.Dispose();
+                _repository.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -70,7 +75,7 @@ namespace CarLotWebAPI.Controllers
             }
             try
             {
-                _repo.Save(inventory);
+                _repository.Save(inventory);
             }
             catch(Exception ex)
             {
@@ -91,7 +96,7 @@ namespace CarLotWebAPI.Controllers
             }
             try
             {
-                _repo.Add(inventory);
+                _repository.Add(inventory);
             }
             catch(Exception ex)
             {
@@ -108,7 +113,7 @@ namespace CarLotWebAPI.Controllers
         { 
             try
             {
-                _repo.Delete(id);
+                _repository.Delete(id);
             }
             catch(Exception ex)
             {
