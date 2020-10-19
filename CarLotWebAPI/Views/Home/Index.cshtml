@@ -41,7 +41,7 @@
         }
         //Get orders
          async function GetOrders(id) {
-            const response = await fetch("http://localhost:62892/api/Order/" + id, {
+            const response = await fetch("http://localhost:62892/api/Customer/" + id, {
                 method: "GET",
                 headers: { "Accept": "application/json" }
             });

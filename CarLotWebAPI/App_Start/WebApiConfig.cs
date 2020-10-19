@@ -1,8 +1,8 @@
-﻿using System;
+﻿using CarLotWebAPI.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-
 
 namespace CarLotWebAPI
 {
@@ -11,6 +11,8 @@ namespace CarLotWebAPI
         public static void Register(HttpConfiguration config)
         {
             // Конфигурация и службы веб-API
+
+            config.DependencyResolver = new NinjectResolver();
 
             // Маршруты веб-API
             config.MapHttpAttributeRoutes();

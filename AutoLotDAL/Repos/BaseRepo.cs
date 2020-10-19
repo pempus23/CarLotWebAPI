@@ -8,7 +8,7 @@ using AutoLotDAL.Models.Base;
 
 namespace AutoLotDAL.Repos
 {
-    public class BaseRepo<T> : IDisposable, IRepo<T> where T : EntityBase, new()
+    public abstract class BaseRepo<T> : IRepo<T> where T : EntityBase, new()
     {
         protected readonly DbSet<T> _table;
         private readonly AutoLotEntities _db;
@@ -42,19 +42,9 @@ namespace AutoLotDAL.Repos
             _db.Entry(entity).State = EntityState.Modified;
             return SaveChanges();
         }      
-
-        public int Delete(T entity)
-        {
-            _db.Entry(entity).State = EntityState.Deleted;
-            return SaveChanges();
-        }
-
         public T GetOne(int? id) => _table.Find(id);
-
         public virtual List<T> GetAll() => _table.ToList();
-
         public List<T> ExecuteQuery(string sql) => _table.SqlQuery(sql).ToList();
-
         public List<T> ExecuteQuery(string sql, object[] sqlParametersObjects)
             => _table.SqlQuery(sql, sqlParametersObjects).ToList();
 
@@ -89,11 +79,6 @@ namespace AutoLotDAL.Repos
                 //some other exception happened and should be handled
                 throw;
             }
-        }
-
-        public int Delete(int id)
-        {
-            throw new NotImplementedException();
         }
     }
 }
