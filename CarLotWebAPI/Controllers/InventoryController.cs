@@ -14,28 +14,37 @@ namespace CarLotWebAPI.Controllers
     public class InventoryController : ApiController
     {
         private readonly IExtendRepository<Inventory> _repository;
+        private  IMapper _mapper;
 
-        static IMapper mapper;
-        static InventoryController()
+        //static IMapper mapper;
+        //static InventoryController()
+        //{
+        //    var config = new MapperConfiguration(cfg => {
+        //        cfg.CreateMap<Inventory, Inventory>()
+        //        .ForMember(x => x.Orders, opt => opt.Ignore());
+        //    });
+        //    mapper = config.CreateMapper();
+
+        //}
+
+        public InventoryController(IExtendRepository<Inventory> repository, IMapper mapper)
         {
+            _repository = repository;
             var config = new MapperConfiguration(cfg => {
                 cfg.CreateMap<Inventory, Inventory>()
                 .ForMember(x => x.Orders, opt => opt.Ignore());
             });
             mapper = config.CreateMapper();
+            _mapper = mapper;
 
         }
 
-        public InventoryController(IExtendRepository<Inventory> repository)
-        {
-            _repository = repository;
-        }
 
         [HttpGet, Route("")]
         public IEnumerable<Inventory> GetInventory()
         {
             var inventories = _repository.GetAll();
-            return mapper.Map<List<Inventory>, List<Inventory>> (inventories);
+            return _mapper.Map<List<Inventory>, List<Inventory>> (inventories);
         }
 
         //GET: api/Inventory/5
@@ -48,7 +57,7 @@ namespace CarLotWebAPI.Controllers
             {
                 return NotFound();
             }
-            return Ok(mapper.Map<Inventory, Inventory>(inventory));
+            return Ok(_mapper.Map<Inventory, Inventory>(inventory));
         }
 
         protected override void Dispose(bool disposing)
