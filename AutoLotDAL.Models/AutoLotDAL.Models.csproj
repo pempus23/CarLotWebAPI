@@ -50,7 +50,9 @@
     <Compile Include="Base\EntityBase.cs" />
     <Compile Include="CreditRisk.cs" />
     <Compile Include="Customer.cs" />
+    <Compile Include="DTO\CustomerDto.cs" />
     <Compile Include="DTO\InventoryDto.cs" />
+    <Compile Include="DTO\OrderDto.cs" />
     <Compile Include="Inventory.cs" />
     <Compile Include="InventoryPartial.cs" />
     <Compile Include="MetaData\InventoryMetaData.cs" />
