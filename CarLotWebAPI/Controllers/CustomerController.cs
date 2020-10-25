@@ -1,4 +1,5 @@
 ﻿using AutoLotDAL.Models;
+using AutoLotDAL.Models.DTO;
 using AutoLotDAL.Repos;
 using AutoLotDAL.Repos.Templates;
 using AutoMapper;
@@ -13,31 +14,23 @@ namespace CarLotWebAPI.Controllers
     public class CustomerController : ApiController
     {
         private readonly IGetList<Customer> _repository;
-        public CustomerController(IGetList<Customer> repository)
+        private readonly IMapper _mapper;
+        public CustomerController(IGetList<Customer> repository, IMapper mapper)
         {
             _repository = repository;
-        }
-        static IMapper mapper;
-        static CustomerController()
-        {
-            var config = new MapperConfiguration(cfg => {
-                cfg.CreateMap<Customer, Customer>()
-                .ForMember(x => x.Orders, opt => opt.Ignore());
-            });
-            mapper = config.CreateMapper();
-
+            _mapper = mapper;
         }
 
         [HttpGet, Route("")]
-        public IEnumerable<Customer> GetCustomers()
+        public IEnumerable<CustomerDto> GetCustomers()
         {
              
             List<Customer> customers = _repository.GetAll();
-            return mapper.Map<List<Customer>, List<Customer>>(customers);
+            return _mapper.Map<List<CustomerDto>>(customers);
         }
 
         [HttpGet, Route("{id}", Name = "DisplayCust")]
-        [ResponseType(typeof(Customer))]
+        [ResponseType(typeof(OrderDto))]
         public async Task<IHttpActionResult> GetOrder(int id)
         {
             List<Customer> order = _repository.GetOne(id);
@@ -45,7 +38,7 @@ namespace CarLotWebAPI.Controllers
             {
                 return NotFound();
             }
-            return Ok(mapper.Map<List<Customer>, List<Customer>>(order));
+            return Ok(_mapper.Map<List<OrderDto>>(order));
         }
 
     }

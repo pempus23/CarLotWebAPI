@@ -10,6 +10,8 @@ namespace CarLotWebAPI.Infrastructure
         public AutoMapping()
         {
             CreateMap<Inventory, InventoryDto>().ForMember(x => x.Orders, opt => opt.Ignore());
+            CreateMap<Customer, CustomerDto>().ForMember(x => x.Orders, opt => opt.Ignore());
+            CreateMap<Customer, OrderDto>();
         }
     }
 }
