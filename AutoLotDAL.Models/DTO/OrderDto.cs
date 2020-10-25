@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AutoLotDAL.Models.DTO
 {
-    class OrderDto : EntityBase
+    public class OrderDto : EntityBase
     {
         public int CustomerId { get; set; }
         public int CarId { get; set; }

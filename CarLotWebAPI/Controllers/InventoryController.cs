@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using AutoLotDAL.Models;
+using AutoLotDAL.Models.DTO;
 using AutoLotDAL.Repos;
 using AutoMapper;
 
@@ -14,37 +15,33 @@ namespace CarLotWebAPI.Controllers
     public class InventoryController : ApiController
     {
         private readonly IExtendRepository<Inventory> _repository;
-        private  IMapper _mapper;
+        private readonly IMapper _mapper;
 
-        //static IMapper mapper;
-        //static InventoryController()
-        //{
-        //    var config = new MapperConfiguration(cfg => {
-        //        cfg.CreateMap<Inventory, Inventory>()
-        //        .ForMember(x => x.Orders, opt => opt.Ignore());
-        //    });
-        //    mapper = config.CreateMapper();
+        //static IMapper _mapper;
+        static InventoryController()
+        {
+            //var config = new MapperConfiguration(cfg =>
+            //{
+            //    cfg.CreateMap<Inventory, Inventory>()
+            //    .ForMember(x => x.Orders, opt => opt.Ignore());
+            //});
+            //_mapper = config.CreateMapper();
 
-        //}
+         }
 
         public InventoryController(IExtendRepository<Inventory> repository, IMapper mapper)
         {
             _repository = repository;
-            var config = new MapperConfiguration(cfg => {
-                cfg.CreateMap<Inventory, Inventory>()
-                .ForMember(x => x.Orders, opt => opt.Ignore());
-            });
-            mapper = config.CreateMapper();
             _mapper = mapper;
-
         }
 
 
         [HttpGet, Route("")]
-        public IEnumerable<Inventory> GetInventory()
+        public List<InventoryDto> GetInventory()
         {
-            var inventories = _repository.GetAll();
-            return _mapper.Map<List<Inventory>, List<Inventory>> (inventories);
+            var inventory = _repository.GetAll();
+            return _mapper.Map<List<InventoryDto>>(inventory);
+
         }
 
         //GET: api/Inventory/5

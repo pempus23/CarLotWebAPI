@@ -11,9 +11,9 @@ namespace CarLotWebAPI.Infrastructure
 {
     public class NinjectResolver : IDependencyResolver
     {
-        private IKernel kernel;
+        private readonly IKernel kernel;
 
-        public NinjectResolver() : this(new StandardKernel())
+        public NinjectResolver() : this(new StandardKernel(new AutoMapperModule()))
         {
         }
 

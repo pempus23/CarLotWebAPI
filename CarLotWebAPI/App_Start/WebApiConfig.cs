@@ -11,7 +11,6 @@ namespace CarLotWebAPI
         public static void Register(HttpConfiguration config)
         {
             // Конфигурация и службы веб-API
-
             config.DependencyResolver = new NinjectResolver();
 
             // Маршруты веб-API

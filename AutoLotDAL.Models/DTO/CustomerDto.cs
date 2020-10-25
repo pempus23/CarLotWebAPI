@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AutoLotDAL.Models.DTO
 {
-    class CustomerDto : EntityBase
+    public class CustomerDto : EntityBase
     {
         [StringLength(50)]
         public string FirstName { get; set; }

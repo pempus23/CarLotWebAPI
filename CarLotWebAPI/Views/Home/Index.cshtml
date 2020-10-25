@@ -157,8 +157,7 @@
             });
             if (response.ok === true) {
                 const car = await response.json();
-                document.querySelector("tr[data-rowid='" + car.Id + "']").remove();
-                reloadPage();          
+                document.querySelector("tr[data-rowid='" + car.Id + "']").remove();         
             }
         }
  
