@@ -23,7 +23,6 @@ namespace CarLotWebAPI.Controllers
             _mapper = mapper;
         }
 
-
         [HttpGet, Route("")]
         public List<InventoryDto> GetInventory()
         {
