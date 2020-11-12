@@ -17,24 +17,11 @@ namespace CarLotWebAPI.Controllers
         private readonly IExtendRepository<Inventory> _repository;
         private readonly IMapper _mapper;
 
-        //static IMapper _mapper;
-        static InventoryController()
-        {
-            //var config = new MapperConfiguration(cfg =>
-            //{
-            //    cfg.CreateMap<Inventory, Inventory>()
-            //    .ForMember(x => x.Orders, opt => opt.Ignore());
-            //});
-            //_mapper = config.CreateMapper();
-
-         }
-
         public InventoryController(IExtendRepository<Inventory> repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
         }
-
 
         [HttpGet, Route("")]
         public List<InventoryDto> GetInventory()
@@ -54,7 +41,7 @@ namespace CarLotWebAPI.Controllers
             {
                 return NotFound();
             }
-            return Ok(_mapper.Map<Inventory, Inventory>(inventory));
+            return Ok(_mapper.Map<InventoryDto>(inventory));
         }
 
         protected override void Dispose(bool disposing)
@@ -122,8 +109,7 @@ namespace CarLotWebAPI.Controllers
                 _repository.Delete(id);
             }
             catch(Exception ex)
-            {
-                //must be other actions
+            {   
                 throw;
             }
             return Ok();
