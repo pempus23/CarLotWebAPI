@@ -109,8 +109,7 @@ namespace CarLotWebAPI.Controllers
                 _repository.Delete(id);
             }
             catch(Exception ex)
-            {
-                //must be other actions
+            {   
                 throw;
             }
             return Ok();

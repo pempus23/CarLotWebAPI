@@ -9,7 +9,6 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css"/>   
 </head>
 <body>
-    <h2>List auto</h2>
     <form name="userForm">
             <input type="hidden" name="id" value="0" />
             <div class="form-group col-md-3">
@@ -193,8 +192,8 @@
  
             const editLink = document.createElement("a");
             editLink.setAttribute("data-id", car.Id);
-            editLink.setAttribute("style", "cursor:pointer;padding:3px;");
-            editLink.setAttribute("class", "btn btn-warning");
+            editLink.setAttribute("style", "cursor:pointer;padding:2px;margin-right:10px;");
+            editLink.setAttribute("class", "btn btn-warning col-md-4");
             editLink.append("Change");
             editLink.addEventListener("click", e => {
  
@@ -205,9 +204,9 @@
 
             const removeLink = document.createElement("a");
             removeLink.setAttribute("data-id", car.Id);
-            removeLink.setAttribute("style", "cursor:pointer;padding:3px;");
+            removeLink.setAttribute("style", "cursor:pointer;padding:2px;");
             removeLink.setAttribute("onclick", "reloadPage();");
-            removeLink.setAttribute("class", "btn btn-danger");
+            removeLink.setAttribute("class", "btn btn-danger col-md-4");
             removeLink.append("Delete");
             removeLink.addEventListener("click", e => {
  
@@ -220,9 +219,9 @@
             const linksTdTwo = document.createElement("td");
             const viewcust = document.createElement("button");
             viewcust.setAttribute("data-id", car.Id);
-            viewcust.setAttribute("style", "cursor:pointer;padding:10px;");
+            viewcust.setAttribute("style", "cursor:pointer;padding:5px;");
             viewcust.setAttribute("class", "btn btn-primary");    
-            viewcust.append("View customers");
+            viewcust.append("Customers");
             viewcust.addEventListener("click", e => {
  
                 e.preventDefault();
@@ -230,6 +229,22 @@
                              
             });
             linksTdTwo.append(viewcust);
+
+            const modal = document.createElement("button");
+            modal.setAttribute("style", "cursor:pointer;padding:5px;");
+            modal.setAttribute("data-toggle", "modal");
+            modal.setAttribute("data-target", "#myModal");
+            //modal.setAttribute("onclick", "out();");
+            modal.setAttribute("class", "btn btn-primary");
+            modal.append("ModalCustomers");
+            modal.addEventListener("click", e => {
+ 
+                e.preventDefault();
+                out(car.Id);
+                             
+            });
+            linksTdTwo.append(modal);
+            
             tr.appendChild(linksTd);
     
             tr.appendChild(linksTdTwo);
@@ -252,11 +267,54 @@
                 EditUser(id, userName, color, make);
         });
  
+        async function out(id){
+            var p;
+            p= document.getElementById('modalT');
+            p.innerHTML =' ';
+
+            const response = await fetch("http://localhost:62892/api/Customer/" + id, {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                const order = await response.json();
+                console.log(order);
+                if(order[0] != null){
+                    order.forEach(function(ord){
+                        p.innerHTML += ord.Id + ' ' +ord.FullName + '</br>';
+                        //alert(ord.Id + ' ' +ord.FullName);
+                    })
+                }
+                else{
+                     p.innerHTML = 'This car don`t have customers';
+                    //alert('This car don`t have customers');
+                }
+                
+            }
+
+        }
+
         // загрузка пользователей
         GetUsers();
         GetCustomer();
         
     </script>
+    <div id="myModal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">X</button>
+                    <h3 class="modal-title text-center text-primary">CUSTOMER LIST</h3>
+                </div>
+                <div class="modal-body">
+                        <p id = "modalT" class="text-center"></p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" data-dismiss="modal">close</button>
+                </div>
+            </div>       
+        </div>
+    </div>
 
 </body>
 </html>
