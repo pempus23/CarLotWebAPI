@@ -55,7 +55,7 @@ namespace CarLotWebAPI.Controllers
 
         //PUT: api/Inventory
         [HttpPut, Route("{id}")]
-        [ResponseType(typeof(void))]
+        [ResponseType(typeof(Inventory))]
         public IHttpActionResult PutInventory(int id, Inventory inventory)
         {
             if(!ModelState.IsValid)
@@ -75,7 +75,7 @@ namespace CarLotWebAPI.Controllers
                 //must be other actions
                 throw;
             }
-            return StatusCode(HttpStatusCode.NoContent);
+            return CreatedAtRoute("DisplayRoute", new { id = inventory.Id }, inventory);
         }
 
         //POST: api/inventory

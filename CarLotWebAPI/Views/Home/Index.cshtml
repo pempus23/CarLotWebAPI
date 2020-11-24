@@ -7,9 +7,10 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <title class="blockquote-footer">List</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css"/>   
+    <script src="~/Scripts/jquery-2.1.4.js"></script>
 </head>
 <body>
-    <form name="userForm">
+    @*  <form name="userForm">
             <input type="hidden" name="id" value="0" />
             <div class="form-group col-md-3">
                 <label for="color">Color:</label>
@@ -25,13 +26,13 @@
             </div>
             <div class="panel-body">
                 <button type="submit" id="submit" class="btn btn-success btn-lg btn-block" onclick="reloadPage()">Save</button>
-                @* <a id="reset" class="btn btn-primary">Reset</a> *@
             </div>
-        </form>
+        </form>  *@
+@*     <button type="submit" class="btn btn-success btn-lg col-md-4 col-md-offset-4" data-toggle="modal" data-target="#ModalForm">New car</button>*@    
     <table class="table table-condensed table-striped  col-md-6">
     <thead><tr><th>Id</th><th>PetName</th><th>Color</th><th>Make</th></tr></thead>
     <tbody>
-    </tbody>
+    </tbody>    
     </table>
 
   <script>
@@ -60,32 +61,22 @@
         }
         //Отримання покупців
           async function GetCustomer() {
-            // отправляет запрос и получаем ответ
             const response = await fetch("http://localhost:62892/api/Customer", {
                 method: "GET",
                 headers: { "Accept": "application/json" },
             });
-            // если запрос прошел нормально
             if (response.ok === true) {
-                // получаем данные
                 const customers = await response.json();
                 console.log(customers);
-                //let rows = document.querySelector("tbody"); 
-               // cars.forEach(car => {
-               //     rows.append(row(customers));
-               // });
          
         }};
         // Получение всех пользователей
         async function GetUsers() {
-            // отправляет запрос и получаем ответ
             const response = await fetch("http://localhost:62892/api/Inventory", {
                 method: "GET",
                 headers: { "Accept": "application/json" },
             });
-            // если запрос прошел нормально
             if (response.ok === true) {
-                // получаем данные
                 const cars = await response.json();
                 console.log(cars);
                 let rows = document.querySelector("tbody"); 
@@ -94,7 +85,7 @@
                 });
          
         }};
-// Получение одного пользователя
+        // Получение одного пользователя
         async function GetUser(id) {
             const response = await fetch("http://localhost:62892/api/Inventory/" + id, {
                 method: "GET",
@@ -102,7 +93,7 @@
             });
             if (response.ok === true) {
                 const car = await response.json();
-                const form = document.forms["userForm"];
+                const form = document.forms["changeForm"];
                 form.elements["id"].value = car.Id;
                 form.elements["color"].value = car.Color;
                 form.elements["petName"].value = car.PetName;
@@ -123,7 +114,7 @@
             });
             if (response.ok === true) {
                 const car = await response.json();
-                reset();
+                resetModal();
                 document.querySelector("tbody").append(row(car));
             }
         }
@@ -141,8 +132,8 @@
             });
             if (response.ok === true) {
                 const car = await response.json();
-                reset();
-                document.querySelector("tr[data-rowid='" + car.Id + "']").replaceWith(row(car));
+                //resetModal();
+                document.querySelector("tr[data-rowid='" + id + "']").replaceWith(row(car));
             }
         }
         // Удаление пользователя
@@ -154,19 +145,17 @@
                     Id: Id
                 })
             });
-            if (response.ok === true) {
-                const car = await response.json();
-                document.querySelector("tr[data-rowid='" + car.Id + "']").remove();         
+            if (response.ok === true) {             
+                document.querySelector("tr[data-rowid='" + Id + "']").remove();     
             }
         }
- 
-        // сброс формы
-        function reset() {
-            const form = document.forms["userForm"];
+
+        function resetModal() {
+            const form = document.forms["addForm"];
             form.reset();
             form.elements["id"].value = 0;
         }
-        // создание строки для таблицы
+        // create tabl
         function row(car) {
  
             const tr = document.createElement("tr");
@@ -194,6 +183,8 @@
             editLink.setAttribute("data-id", car.Id);
             editLink.setAttribute("style", "cursor:pointer;padding:2px;margin-right:10px;");
             editLink.setAttribute("class", "btn btn-warning col-md-4");
+            editLink.setAttribute("data-toggle", "modal");
+            editLink.setAttribute("data-target", "#ModalChange");
             editLink.append("Change");
             editLink.addEventListener("click", e => {
  
@@ -205,7 +196,6 @@
             const removeLink = document.createElement("a");
             removeLink.setAttribute("data-id", car.Id);
             removeLink.setAttribute("style", "cursor:pointer;padding:2px;");
-            removeLink.setAttribute("onclick", "reloadPage();");
             removeLink.setAttribute("class", "btn btn-danger col-md-4");
             removeLink.append("Delete");
             removeLink.addEventListener("click", e => {
@@ -217,26 +207,13 @@
             linksTd.append(removeLink);
 
             const linksTdTwo = document.createElement("td");
-            const viewcust = document.createElement("button");
-            viewcust.setAttribute("data-id", car.Id);
-            viewcust.setAttribute("style", "cursor:pointer;padding:5px;");
-            viewcust.setAttribute("class", "btn btn-primary");    
-            viewcust.append("Customers");
-            viewcust.addEventListener("click", e => {
- 
-                e.preventDefault();
-                GetOrders(car.Id);
-                             
-            });
-            linksTdTwo.append(viewcust);
 
             const modal = document.createElement("button");
             modal.setAttribute("style", "cursor:pointer;padding:5px;");
             modal.setAttribute("data-toggle", "modal");
             modal.setAttribute("data-target", "#myModal");
-            //modal.setAttribute("onclick", "out();");
             modal.setAttribute("class", "btn btn-primary");
-            modal.append("ModalCustomers");
+            modal.append("Customers");
             modal.addEventListener("click", e => {
  
                 e.preventDefault();
@@ -253,23 +230,50 @@
         }
 
  
-        // отправка формы
-        document.forms["userForm"].addEventListener("submit", e => {
+         //отправка формы
+         //document.forms["userForm"].addEventListener("submit", e => {
+          //  e.preventDefault();
+         //   const form = document.forms["userForm"];
+           // const id = form.elements["id"].value;
+         //   const userName = form.elements["petName"].value;
+          //  const color = form.elements["color"].value;
+        //    const make = form.elements["make"].value;
+           // if (id == 0)
+        //        CreateUser(userName, color, make);
+        //    else
+       //         EditUser(id, userName, color, make);
+      //  });
+ 
+
+        function createFromModal(){
+            document.forms["addForm"].addEventListener("submit", e => {
             e.preventDefault();
-            const form = document.forms["userForm"];
+
+            const form = document.forms["addForm"];
             const id = form.elements["id"].value;
             const userName = form.elements["petName"].value;
             const color = form.elements["color"].value;
             const make = form.elements["make"].value;
-            if (id == 0)
-                CreateUser(userName, color, make);
-            else
-                EditUser(id, userName, color, make);
-        });
+                CreateUser(userName, color, make)
+            });
+        }
+
+         function changeFromModal(){
+            document.forms["changeForm"].addEventListener("submit", e => {
+            e.preventDefault();
+
+            const form = document.forms["changeForm"];
+            const id = form.elements["id"].value;
+            const userName = form.elements["petName"].value;
+            const color = form.elements["color"].value;
+            const make = form.elements["make"].value;
+                EditUser(id, userName, color, make)
+            });
+        }
  
-        async function out(id){
+            async function out(id){
             var p;
-            p= document.getElementById('modalT');
+            p = document.getElementById('modalT');
             p.innerHTML =' ';
 
             const response = await fetch("http://localhost:62892/api/Customer/" + id, {
@@ -281,13 +285,11 @@
                 console.log(order);
                 if(order[0] != null){
                     order.forEach(function(ord){
-                        p.innerHTML += ord.Id + ' ' +ord.FullName + '</br>';
-                        //alert(ord.Id + ' ' +ord.FullName);
+                        p.innerHTML += ord.Id + ' ' +'<em>'+ ord.FullName +'</em>' + '</br>';
                     })
                 }
                 else{
                      p.innerHTML = 'This car don`t have customers';
-                    //alert('This car don`t have customers');
                 }
                 
             }
@@ -299,6 +301,7 @@
         GetCustomer();
         
     </script>
+    
     <div id="myModal" class="modal fade" tabindex="-1">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -316,5 +319,72 @@
         </div>
     </div>
 
+    <div id="ModalChange" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">X</button>
+                    <h3 class="modal-title text-center text-primary">CAR</h3>
+                </div>
+                <div class="modal-body">
+                        <form name="changeForm">
+                        <input type="hidden" name="id" value="0" />
+                        <div class="form-group col-sm-3">
+                            <label for="color">Color:</label>
+                            <input class="form-control" name="color" />
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label for="make">Make:</label>
+                            <input class="form-control" name="make"/>
+                        </div>
+                        <div class="form-group col-sm-5 ">
+                            <label for="petName">PetName:</label>
+                            <input class="form-control" name="petName"/>
+                        </div>
+                        <div class="panel-body">
+                             <button type="submit" id="submit" class="btn btn-success btn-lg btn-block" onclick = "changeFromModal()">Save</button>
+                        </div>
+                        </form>
+                </div>
+                <div class="modal-footer">
+                    <button  class="btn btn-danger" data-dismiss="modal" aria-label="Close">Close</button>
+                </div>
+            </div>       
+        </div>
+    </div>
+
+    <div id="ModalAdd" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">X</button>
+                    <h3 class="modal-title text-center text-primary">NEW CAR</h3>
+                </div>
+                <div class="modal-body">
+                        <form name="addForm">
+                        <input type="hidden" name="id" value="0" />
+                        <div class="form-group col-sm-3">
+                            <label for="color">Color:</label>
+                            <input class="form-control" name="color" />
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label for="make">Make:</label>
+                            <input class="form-control" name="make"/>
+                        </div>
+                        <div class="form-group col-sm-5 ">
+                            <label for="petName">PetName:</label>
+                            <input class="form-control" name="petName"/>
+                        </div>
+                        <div class="panel-body">
+                            <button  type="submit" id="submit"  class="btn btn-success btn-lg btn-block" onclick = "createFromModal()">Save</button>
+                        </div>
+                        </form>
+                </div>
+                <div class="modal-footer">
+                      <button  class="btn btn-danger" data-dismiss="modal" aria-label="Close">Close</button>
+                 </div>
+            </div>       
+        </div>
+    </div>
 </body>
 </html>
